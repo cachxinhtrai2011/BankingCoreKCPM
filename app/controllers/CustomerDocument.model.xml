@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataModel baseSchema="dbo" baseTable="CustomerDocument" alias="CustomerDocument" created="2021-06-12T21:50:33" modified="2021-06-12T22:04:13" x="20" y="20" xmlns="urn:schemas-codeontime-com:data-model">
+  <foreignKeys>
+    <foreignKey id="Customer" parentTableSchema="dbo" parentTableName="Customers" x="307" y="20">
+      <foreignKeyColumn columnName="CustomerID" parentColumnName="CustomerID" />
+    </foreignKey>
+  </foreignKeys>
+  <columns>
+    <column name="ID" fieldName="ID" label="Id" />
+    <column name="DocumentID" fieldName="DocumentID" label="Document ID" />
+    <column name="Address" fieldName="Address" label="Address" />
+    <column name="Date" fieldName="Date" label="Date" />
+    <column name="FullName" fieldName="FullName" label="Full Name" />
+    <column name="CustomerID" fieldName="CustomerID" label="Customer ID" aliasColumnName="CustomerName" aliasForeignKey="Customer" />
+    <column name="CustomerName" fieldName="CustomerName" label="Customer Name" foreignKey="Customer" />
+    <column name="DocumentFront" fieldName="DocumentFront" label="Document Front" />
+    <column name="DocumentBack" fieldName="DocumentBack" label="Document Back" />
+  </columns>
+</dataModel>

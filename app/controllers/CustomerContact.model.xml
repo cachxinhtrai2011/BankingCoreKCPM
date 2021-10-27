@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataModel baseSchema="dbo" baseTable="CustomerContact" alias="CustomerContact" created="2021-06-12T21:50:33" modified="2021-06-12T21:50:33" xmlns="urn:schemas-codeontime-com:data-model">
+  <foreignKeys>
+    <foreignKey id="Customer" parentTableSchema="dbo" parentTableName="Customers">
+      <foreignKeyColumn columnName="CustomerID" parentColumnName="CustomerID" />
+    </foreignKey>
+  </foreignKeys>
+  <columns>
+    <column name="ID" fieldName="ID" label="Id" />
+    <column name="FullName" fieldName="FullName" label="Full Name" />
+    <column name="Phone" fieldName="Phone" label="Phone" />
+    <column name="CustomerID" fieldName="CustomerID" label="Customer ID" aliasColumnName="CustomerName" aliasForeignKey="Customer" />
+    <column name="CustomerName" fieldName="CustomerName" label="Customer Name" foreignKey="Customer" />
+  </columns>
+</dataModel>

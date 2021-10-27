@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataController name="CustomerAccounts" conflictDetection="overwriteChanges" label="Customer Accounts" xmlns="urn:schemas-codeontime-com:data-aquarium">
+  <commands>
+    <command id="command1" type="Text">
+      <text><![CDATA[
+select
+	"CustomerAccounts"."ID" "ID"
+	,"CustomerAccounts"."AccountNumber" "AccountNumber"
+	,"CustomerAccounts"."CreateDate" "CreateDate"
+	,"CustomerAccounts"."CustomerID" "CustomerID"
+	,"Customer"."CustomerName" "CustomerName"
+	,"Customer"."UserName" "CustomerUserName"
+	,"CustomerAccounts"."EmployeeID" "EmployeeID"
+	,"CustomerAccounts"."Interest" "Interest"
+	,"CustomerAccounts"."DateBegin" "DateBegin"
+from "dbo"."CustomerAccounts" "CustomerAccounts"
+	left join "dbo"."Customers" "Customer" on "CustomerAccounts"."CustomerID" = "Customer"."CustomerID"
+]]></text>
+    </command>
+    <command id="IDIdentityCommand" type="Text" event="Inserted">
+      <text><![CDATA[select @@identity]]></text>
+      <output>
+        <fieldOutput fieldName="ID" />
+      </output>
+    </command>
+  </commands>
+  <fields>
+    <field name="AccountNumber" type="String" label="Account Number" length="128" showInSummary="true" />
+    <field name="ID" type="Int32" allowNulls="false" isPrimaryKey="true" label="Id" readOnly="true" />
+    <field name="CreateDate" type="DateTime" label="Create Date" showInSummary="true" />
+    <field name="CustomerID" type="Int32" label="Customer ID" showInSummary="true">
+      <items style="Lookup" dataController="Customers" newDataView="createForm1" dataValueField="CustomerID" dataTextField="CustomerName" copy="CustomerUserName=UserName" />
+    </field>
+    <field name="CustomerName" type="String" readOnly="true" label="Customer Name" length="128" />
+    <field name="CustomerUserName" type="String" readOnly="true" label="Customer User Name" length="128" />
+    <field name="EmployeeID" type="String" label="Employee ID" length="128" showInSummary="true" />
+    <field name="Interest" type="Decimal" label="Interest" showInSummary="true" />
+    <field name="DateBegin" type="DateTime" label="Date Begin" />
+    <field name="Balance" type="Decimal" readOnly="true" label="Số dư" computed="true" dataFormatString="N0">
+      <formula> select (sum(Debit) - sum(Credit)) from Transactions where AccountID = CustomerAccounts.ID</formula>
+    </field>
+  </fields>
+  <views>
+    <view id="grid1" type="Grid" commandId="command1" label="Tài khoản KH">
+      <headerText />
+      <dataFields>
+        <dataField fieldName="AccountNumber">
+          <headerText>Số tài khoản</headerText>
+        </dataField>
+        <dataField fieldName="CreateDate" columns="10">
+          <headerText>Ngày lập</headerText>
+        </dataField>
+        <dataField fieldName="CustomerID" aliasFieldName="CustomerName">
+          <headerText>Khách Hàng</headerText>
+        </dataField>
+        <dataField fieldName="Interest" columns="15">
+          <headerText>Lãi suât</headerText>
+        </dataField>
+        <dataField fieldName="DateBegin" columns="10">
+          <headerText>Ngày tính lãi</headerText>
+        </dataField>
+        <dataField fieldName="Balance" columns="15" />
+      </dataFields>
+    </view>
+    <view id="editForm1" type="Form" commandId="command1" label="Xem - Sửa">
+      <headerText />
+      <categories>
+        <category id="c1" headerText="Customer Accounts" flow="NewColumn">
+          <description><![CDATA[$DefaultEditDescription]]></description>
+          <dataFields>
+            <dataField fieldName="AccountNumber" />
+            <dataField fieldName="CreateDate" columns="10" />
+            <dataField fieldName="CustomerID" aliasFieldName="CustomerName" />
+            <dataField fieldName="CustomerUserName" />
+            <dataField fieldName="EmployeeID" />
+            <dataField fieldName="Interest" columns="15" />
+            <dataField fieldName="DateBegin" columns="10" />
+            <dataField fieldName="Balance" columns="15" />
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+    <view id="createForm1" type="Form" commandId="command1" label="Thêm mới">
+      <headerText />
+      <categories>
+        <category id="c1" flow="NewColumn">
+          <description><![CDATA[$DefaultNewDescription]]></description>
+          <dataFields>
+            <dataField fieldName="Balance" columns="15" />
+            <dataField fieldName="AccountNumber">
+              <headerText>Số tài khoản</headerText>
+            </dataField>
+            <dataField fieldName="CreateDate" columns="10">
+              <headerText>Ngày lập</headerText>
+            </dataField>
+            <dataField fieldName="CustomerID" aliasFieldName="CustomerName">
+              <headerText>Khách Hàng</headerText>
+            </dataField>
+            <dataField fieldName="Interest" columns="15">
+              <headerText>Lãi suât</headerText>
+            </dataField>
+            <dataField fieldName="DateBegin" columns="10">
+              <headerText>Ngày tính lãi</headerText>
+            </dataField>
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+    <view id="v100" type="Grid" commandId="command1" label="Tài khoản KH" filter="CustomerUserName = @BusinessRules_UserName">
+      <headerText />
+      <dataFields>
+        <dataField fieldName="AccountNumber">
+          <headerText>Số tài khoản</headerText>
+        </dataField>
+        <dataField fieldName="CreateDate" columns="10">
+          <headerText>Ngày lập</headerText>
+        </dataField>
+        <dataField fieldName="CustomerID" aliasFieldName="CustomerName">
+          <headerText>Khách Hàng</headerText>
+        </dataField>
+        <dataField fieldName="Interest" columns="15">
+          <headerText>Lãi suât</headerText>
+        </dataField>
+        <dataField fieldName="DateBegin" columns="10">
+          <headerText>Ngày tính lãi</headerText>
+        </dataField>
+        <dataField fieldName="Balance" columns="15" />
+      </dataFields>
+    </view>
+  </views>
+  <actions>
+    <actionGroup id="ag1" scope="Grid">
+      <action id="a1" commandName="Select" commandArgument="editForm1" />
+      <action id="a2" commandName="Edit" />
+      <action id="a3" commandName="Delete" />
+      <action id="a6" />
+      <action id="a7" commandName="New" commandArgument="grid1" />
+      <action id="a8" commandName="Duplicate" commandArgument="createForm1" />
+    </actionGroup>
+    <actionGroup id="ag2" scope="Form">
+      <action id="a1" commandName="Edit" roles="Employee" />
+      <action id="a2" commandName="Delete" roles="Employee" />
+      <action id="a3" commandName="Cancel" />
+      <action id="a4" whenLastCommandName="Edit" commandName="Update" commandArgument="Save" />
+      <action id="a5" whenLastCommandName="Edit" commandName="Cancel" />
+      <action id="a6" whenLastCommandName="New" commandName="Insert" commandArgument="Save" />
+      <action id="a7" whenLastCommandName="New" commandName="Insert" commandArgument="SaveAndNew" />
+      <action id="a8" whenLastCommandName="New" commandName="Cancel" />
+      <action id="a9" whenLastCommandName="Duplicate" commandName="Insert" />
+      <action id="a10" whenLastCommandName="Duplicate" commandName="Cancel" />
+      <action id="a13" whenLastCommandName="Insert" whenLastCommandArgument="Save" whenView="createForm1" commandName="Select" commandArgument="editForm1" whenClientScript="this.hasDetails()" />
+      <action id="a14" whenLastCommandName="Insert" whenLastCommandArgument="SaveAndNew" commandName="New" commandArgument="createForm1" />
+    </actionGroup>
+    <actionGroup id="ag3" scope="ActionBar" headerText="New" flat="true">
+      <action id="a1" commandName="New" commandArgument="createForm1" cssClass="NewIcon" headerText="Thêm mới" roles="Employee" />
+    </actionGroup>
+    <actionGroup id="ag4" scope="ActionBar" headerText="Edit/Delete" flat="true">
+      <action id="a1" whenKeySelected="true" commandName="Edit" commandArgument="editForm1" cssClass="EditIcon" whenView="grid1" headerText="Sửa" roles="Employee" />
+      <action id="a2" whenKeySelected="true" commandName="Delete" cssClass="DeleteIcon" whenView="grid1" headerText="Xóa" roles="Employee" />
+    </actionGroup>
+  </actions>
+  <businessRules>
+    <rule id="r100" commandName="Insert" type="Sql" phase="After"><![CDATA[update CustomerAccounts
+set EmployeeID = @BusinessRules_UserName, CreateDate = GETDATE(), DateBegin = GETDATE()
+where ID = @ID]]></rule>
+  </businessRules>
+</dataController>

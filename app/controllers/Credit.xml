@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataController name="Credit" label="Credit" conflictDetection="overwriteChanges" xmlns="urn:schemas-codeontime-com:data-aquarium">
+  <fields>
+    <field name="AccountID" type="Int32" label="Account ID">
+      <items style="Lookup" dataController="CustomerAccounts" dataView="grid1" dataTextField="AccountNumber" dataValueField="ID" />
+    </field>
+    <field name="Amount" type="Decimal" label="Amount" dataFormatString="N0" />
+    <field name="Notes" type="String" label="Notes" />
+  </fields>
+</dataController>

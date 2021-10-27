@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataModel baseSchema="dbo" baseTable="Transactions" alias="Transactions" created="2021-06-12T21:50:34" modified="2021-06-12T22:56:51" x="20" y="20" xmlns="urn:schemas-codeontime-com:data-model">
+  <foreignKeys>
+    <foreignKey id="Account" parentTableSchema="dbo" parentTableName="CustomerAccounts" x="295" y="20">
+      <foreignKeyColumn columnName="AccountID" parentColumnName="ID" />
+    </foreignKey>
+    <foreignKey id="AccountCustomer" parentTableSchema="dbo" parentTableName="Customers" baseForeignKey="Account" x="601" y="20">
+      <foreignKeyColumn columnName="CustomerID" parentColumnName="CustomerID" />
+    </foreignKey>
+  </foreignKeys>
+  <columns>
+    <column name="ID" fieldName="ID" label="Id" />
+    <column name="AccountID" fieldName="AccountID" label="Account ID" aliasColumnName="AccountNumber" aliasForeignKey="Account" />
+    <column name="AccountNumber" fieldName="AccountNumber" label="Account Number" foreignKey="Account" />
+    <column name="CustomerID" fieldName="AccountCustomerID" label="Account Customer ID" foreignKey="Account" />
+    <column name="CustomerName" fieldName="AccountCustomerName" label="Account Customer Name" foreignKey="AccountCustomer" />
+    <column name="UserName" fieldName="AccountCustomerUserName" label="Account Customer User Name" foreignKey="AccountCustomer" />
+    <column name="Credit" fieldName="Credit" label="Credit" />
+    <column name="Debit" fieldName="Debit" label="Debit" />
+    <column name="Date" fieldName="Date" label="Date" />
+    <column name="Note" fieldName="Note" label="Note" />
+    <column name="Users" fieldName="Users" label="Users" />
+  </columns>
+</dataModel>

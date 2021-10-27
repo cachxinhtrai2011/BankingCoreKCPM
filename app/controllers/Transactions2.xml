@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataController name="Transactions2" conflictDetection="overwriteChanges" label="Transactions2" xmlns="urn:schemas-codeontime-com:data-aquarium">
+  <commands>
+    <command id="command1" type="Text">
+      <text><![CDATA[
+select
+	"Transactions"."ID" "ID"
+	,"Transactions"."AccountID" "AccountID"
+	,"Account"."AccountNumber" "AccountNumber"
+	,"Account"."CustomerID" "AccountCustomerID"
+	,"AccountCustomer"."CustomerName" "AccountCustomerName"
+	,"AccountCustomer"."UserName" "AccountCustomerUserName"
+	,"Transactions"."Credit" "Credit"
+	,"Transactions"."Debit" "Debit"
+	,"Transactions"."Date" "Date"
+	,"Transactions"."Note" "Note"
+	,"Transactions"."Users" "Users"
+from "dbo"."Transactions" "Transactions"
+	left join "dbo"."CustomerAccounts" "Account" on "Transactions"."AccountID" = "Account"."ID"
+	left join "dbo"."Customers" "AccountCustomer" on "Account"."CustomerID" = "AccountCustomer"."CustomerID"
+]]></text>
+    </command>
+    <command id="IDIdentityCommand" type="Text" event="Inserted">
+      <text><![CDATA[select @@identity]]></text>
+      <output>
+        <fieldOutput fieldName="ID" />
+      </output>
+    </command>
+  </commands>
+  <fields>
+    <field name="ID" type="Int32" allowNulls="false" isPrimaryKey="true" label="Id" readOnly="true" />
+    <field name="AccountID" type="Int32" label="Account ID" showInSummary="true">
+      <items style="Lookup" dataController="CustomerAccounts" newDataView="createForm1" dataValueField="ID" dataTextField="AccountNumber" copy="AccountCustomerID=CustomerID, AccountCustomerName=CustomerName, AccountCustomerUserName=CustomerUserName" />
+    </field>
+    <field name="AccountNumber" type="String" readOnly="true" label="Account Number" length="128" />
+    <field name="AccountCustomerID" type="Int32" readOnly="true" label="Account Customer ID" />
+    <field name="AccountCustomerName" type="String" readOnly="true" label="Account Customer Name" length="128" />
+    <field name="AccountCustomerUserName" type="String" readOnly="true" label="Account Customer User Name" length="128" />
+    <field name="Credit" type="Decimal" label="Credit" showInSummary="true" dataFormatString="N0" />
+    <field name="Debit" type="Decimal" label="Debit" showInSummary="true" dataFormatString="N0" />
+    <field name="Date" type="DateTime" label="Date" showInSummary="true" />
+    <field name="Note" type="String" label="Note" length="128" showInSummary="true" />
+    <field name="Users" type="String" label="Users" length="128" />
+  </fields>
+  <views>
+    <view id="grid1" type="Grid" commandId="command1" label="Giao Dịch" filter="AccountCustomerUserName =  @BusinessRules_UserName">
+      <headerText />
+      <dataFields>
+        <dataField fieldName="ID" columns="15">
+          <headerText>Mã giao dịch</headerText>
+        </dataField>
+        <dataField fieldName="AccountID" aliasFieldName="AccountNumber">
+          <headerText>Tài khoản</headerText>
+        </dataField>
+        <dataField fieldName="Debit" columns="15">
+          <headerText>Nộp Tiền</headerText>
+        </dataField>
+        <dataField fieldName="Credit" columns="15">
+          <headerText>Rút Tiền</headerText>
+        </dataField>
+        <dataField fieldName="Date" columns="10">
+          <headerText>Ngày giao dịch</headerText>
+        </dataField>
+        <dataField fieldName="Note">
+          <headerText>Nội dung</headerText>
+        </dataField>
+      </dataFields>
+    </view>
+    <view id="editForm1" type="Form" commandId="command1" label="Chi Tiết Giao Dịch">
+      <headerText />
+      <categories>
+        <category id="c1" headerText="Transactions2" flow="NewColumn">
+          <description><![CDATA[$DefaultEditDescription]]></description>
+          <dataFields>
+            <dataField fieldName="ID" columns="15">
+              <headerText>Mã giao dịch</headerText>
+            </dataField>
+            <dataField fieldName="AccountID" aliasFieldName="AccountNumber">
+              <headerText>Tài khoản</headerText>
+            </dataField>
+            <dataField fieldName="Debit" columns="15">
+              <headerText>Nộp Tiền</headerText>
+            </dataField>
+            <dataField fieldName="Credit" columns="15">
+              <headerText>Rút Tiền</headerText>
+            </dataField>
+            <dataField fieldName="Date" columns="10">
+              <headerText>Ngày giao dịch</headerText>
+            </dataField>
+            <dataField fieldName="Note">
+              <headerText>Nội dung</headerText>
+            </dataField>
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+  </views>
+  <actions>
+    <actionGroup id="ag1" scope="Grid">
+      <action id="a1" commandName="Select" commandArgument="editForm1" />
+    </actionGroup>
+    <actionGroup id="ag2" scope="Form">
+      <action id="a3" commandName="Cancel" />
+    </actionGroup>
+    <actionGroup id="ag8" scope="Row" />
+  </actions>
+</dataController>

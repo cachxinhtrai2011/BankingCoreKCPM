@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0">
+  <siteMapNode title="^SiteHome^Home^SiteHome^" description="" url="~/index.html">
+    <siteMapNode title="^HomePath^Home^HomePath^" description="^HomeDesc^Application home page^HomeDesc^" url="~/pages/home" cssClass="Wide" />
+    <siteMapNode title="Mở sổ" description="" url="~/pages/customers" roles="Employee" />
+    <siteMapNode title="TH Giao Dịch" description="" url="~/pages/transactions" roles="Employee" />
+    <siteMapNode title="KH Giao dịch" description="" url="~/pages/transactions-2" roles="Customers" />
+    <siteMapNode title="UserAccount" description="^MembershipDesc^User and role manager^MembershipDesc^" url="~/pages/membership" roles="Administrators" />
+    <siteMapNode title="Tài Khoản" description="" url="~/pages/tai-khoan" roles="Customers" />
+  </siteMapNode>
+</siteMap>

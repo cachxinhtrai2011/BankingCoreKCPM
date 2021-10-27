@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataController name="CustomerDocument" conflictDetection="overwriteChanges" label="Customer Document" xmlns="urn:schemas-codeontime-com:data-aquarium">
+  <commands>
+    <command id="command1" type="Text">
+      <text><![CDATA[
+select
+	"CustomerDocument"."ID" "ID"
+	,"CustomerDocument"."DocumentID" "DocumentID"
+	,"CustomerDocument"."Address" "Address"
+	,"CustomerDocument"."Date" "Date"
+	,"CustomerDocument"."FullName" "FullName"
+	,"CustomerDocument"."CustomerID" "CustomerID"
+	,"Customer"."CustomerName" "CustomerName"
+	,"CustomerDocument"."DocumentFront" "DocumentFront"
+	,"CustomerDocument"."DocumentBack" "DocumentBack"
+from "dbo"."CustomerDocument" "CustomerDocument"
+	left join "dbo"."Customers" "Customer" on "CustomerDocument"."CustomerID" = "Customer"."CustomerID"
+]]></text>
+    </command>
+    <command id="IDIdentityCommand" type="Text" event="Inserted">
+      <text><![CDATA[select @@identity]]></text>
+      <output>
+        <fieldOutput fieldName="ID" />
+      </output>
+    </command>
+  </commands>
+  <fields>
+    <field name="ID" type="Int32" allowNulls="false" isPrimaryKey="true" label="Id" readOnly="true" />
+    <field name="DocumentID" type="String" label="Số CMND / CCCD" length="128" showInSummary="true" />
+    <field name="Address" type="String" label="Địa Chỉ" length="128" showInSummary="true" />
+    <field name="Date" type="DateTime" label="Ngày cấp" showInSummary="true" />
+    <field name="FullName" type="String" label="Họ tên" length="128" showInSummary="true" />
+    <field name="CustomerID" type="Int32" label="Customer ID" showInSummary="true">
+      <items style="Lookup" dataController="Customers" newDataView="createForm1" dataValueField="CustomerID" dataTextField="CustomerName" />
+    </field>
+    <field name="CustomerName" type="String" readOnly="true" label="Customer Name" length="128" />
+    <field name="DocumentFront" type="Byte[]" onDemand="true" sourceFields="ID" onDemandHandler="CustomerDocumentDocumentFront" onDemandStyle="Thumbnail" allowQBE="false" allowSorting="false" label="Mặt trước" />
+    <field name="DocumentBack" type="Byte[]" onDemand="true" sourceFields="ID" onDemandHandler="CustomerDocumentDocumentBack" onDemandStyle="Thumbnail" allowQBE="false" allowSorting="false" label="Mặt sau" />
+  </fields>
+  <views>
+    <view id="grid1" type="Grid" commandId="command1" label="Giấy tờ">
+      <headerText />
+      <dataFields>
+        <dataField fieldName="DocumentID" />
+        <dataField fieldName="Address" />
+        <dataField fieldName="Date" columns="10" />
+        <dataField fieldName="FullName" />
+        <dataField fieldName="CustomerID" aliasFieldName="CustomerName" />
+        <dataField fieldName="DocumentFront" columns="15" />
+        <dataField fieldName="DocumentBack" columns="15" />
+      </dataFields>
+    </view>
+    <view id="editForm1" type="Form" commandId="command1" label="Xem - Sửa">
+      <headerText />
+      <categories>
+        <category id="c1" headerText="Customer Document" flow="NewColumn">
+          <description><![CDATA[$DefaultEditDescription]]></description>
+          <dataFields>
+            <dataField fieldName="DocumentID" />
+            <dataField fieldName="Address" />
+            <dataField fieldName="Date" columns="10" />
+            <dataField fieldName="FullName" />
+            <dataField fieldName="CustomerID" aliasFieldName="CustomerName" />
+            <dataField fieldName="DocumentFront" columns="15" />
+            <dataField fieldName="DocumentBack" columns="15" />
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+    <view id="createForm1" type="Form" commandId="command1" label="Thêm mới">
+      <headerText />
+      <categories>
+        <category id="c1" flow="NewColumn">
+          <description><![CDATA[$DefaultNewDescription]]></description>
+          <dataFields>
+            <dataField fieldName="DocumentID" />
+            <dataField fieldName="Address" />
+            <dataField fieldName="Date" columns="10" />
+            <dataField fieldName="FullName" />
+            <dataField fieldName="CustomerID" aliasFieldName="CustomerName" />
+            <dataField fieldName="DocumentFront" columns="15" />
+            <dataField fieldName="DocumentBack" columns="15" />
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+  </views>
+  <actions>
+    <actionGroup id="ag1" scope="Grid">
+      <action id="a1" commandName="Select" commandArgument="editForm1" />
+      <action id="a2" commandName="Edit" />
+      <action id="a3" commandName="Delete" />
+      <action id="a6" />
+      <action id="a7" commandName="New" commandArgument="grid1" />
+      <action id="a8" commandName="Duplicate" commandArgument="createForm1" />
+    </actionGroup>
+    <actionGroup id="ag2" scope="Form">
+      <action id="a1" commandName="Edit" />
+      <action id="a2" commandName="Delete" />
+      <action id="a3" commandName="Cancel" />
+      <action id="a4" whenLastCommandName="Edit" commandName="Update" commandArgument="Save" />
+      <action id="a5" whenLastCommandName="Edit" commandName="Cancel" />
+      <action id="a6" whenLastCommandName="New" commandName="Insert" commandArgument="Save" />
+      <action id="a7" whenLastCommandName="New" commandName="Insert" commandArgument="SaveAndNew" />
+      <action id="a8" whenLastCommandName="New" commandName="Cancel" />
+      <action id="a9" whenLastCommandName="Duplicate" commandName="Insert" />
+      <action id="a10" whenLastCommandName="Duplicate" commandName="Cancel" />
+      <action id="a13" whenLastCommandName="Insert" whenLastCommandArgument="Save" whenView="createForm1" commandName="Select" commandArgument="editForm1" whenClientScript="this.hasDetails()" />
+      <action id="a14" whenLastCommandName="Insert" whenLastCommandArgument="SaveAndNew" commandName="New" commandArgument="createForm1" />
+    </actionGroup>
+    <actionGroup id="ag3" scope="ActionBar" headerText="New" flat="true">
+      <action id="a1" commandName="New" commandArgument="createForm1" cssClass="NewIcon" headerText="Thêm mới" />
+    </actionGroup>
+    <actionGroup id="ag4" scope="ActionBar" headerText="Edit/Delete" flat="true">
+      <action id="a1" whenKeySelected="true" commandName="Edit" commandArgument="editForm1" cssClass="EditIcon" whenView="grid1" headerText="Sửa" />
+      <action id="a2" whenKeySelected="true" commandName="Delete" cssClass="DeleteIcon" whenView="grid1" headerText="Xóa" />
+    </actionGroup>
+  </actions>
+</dataController>

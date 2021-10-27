@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataController name="Transactions" conflictDetection="overwriteChanges" label="Transactions" xmlns="urn:schemas-codeontime-com:data-aquarium">
+  <commands>
+    <command id="command1" type="Text">
+      <text><![CDATA[
+select
+	"Transactions"."ID" "ID"
+	,"Transactions"."AccountID" "AccountID"
+	,"Account"."AccountNumber" "AccountNumber"
+	,"AccountCustomer"."CustomerName" "AccountCustomerName"
+	,"Transactions"."Credit" "Credit"
+	,"Transactions"."Debit" "Debit"
+	,"Transactions"."Date" "Date"
+	,"Transactions"."Note" "Note"
+	,"Transactions"."Users" "Users"
+from "dbo"."Transactions" "Transactions"
+	left join "dbo"."CustomerAccounts" "Account" on "Transactions"."AccountID" = "Account"."ID"
+	left join "dbo"."Customers" "AccountCustomer" on "Account"."CustomerID" = "AccountCustomer"."CustomerID"
+]]></text>
+    </command>
+    <command id="IDIdentityCommand" type="Text" event="Inserted">
+      <text><![CDATA[select @@identity]]></text>
+      <output>
+        <fieldOutput fieldName="ID" />
+      </output>
+    </command>
+  </commands>
+  <fields>
+    <field name="ID" type="Int32" allowNulls="false" isPrimaryKey="true" label="Id" readOnly="true" />
+    <field name="AccountID" type="Int32" label="Account ID" showInSummary="true">
+      <items style="Lookup" dataController="CustomerAccounts" newDataView="createForm1" dataValueField="ID" dataTextField="AccountNumber" copy="AccountCustomerName=CustomerName" />
+    </field>
+    <field name="AccountNumber" type="String" readOnly="true" label="Account Number" length="128" />
+    <field name="AccountCustomerName" type="String" readOnly="true" label="Account Customer Name" length="128" />
+    <field name="Credit" type="Decimal" label="Credit" showInSummary="true" dataFormatString="N0" />
+    <field name="Debit" type="Decimal" label="Debit" showInSummary="true" dataFormatString="N0" />
+    <field name="Date" type="DateTime" label="Date" showInSummary="true" />
+    <field name="Note" type="String" label="Note" length="128" showInSummary="true" />
+    <field name="Users" type="String" label="Users" length="128" />
+  </fields>
+  <views>
+    <view id="grid1" type="Grid" commandId="command1" label="Giao dịch">
+      <headerText />
+      <dataFields>
+        <dataField fieldName="ID" columns="15">
+          <headerText>Mã giao dịch</headerText>
+        </dataField>
+        <dataField fieldName="AccountID" aliasFieldName="AccountNumber">
+          <headerText>Số TK</headerText>
+        </dataField>
+        <dataField fieldName="AccountCustomerName">
+          <headerText>Tên KH</headerText>
+        </dataField>
+        <dataField fieldName="Debit" columns="15">
+          <headerText>Nộp tiền</headerText>
+        </dataField>
+        <dataField fieldName="Credit" columns="15">
+          <headerText>Rút Tiền</headerText>
+        </dataField>
+        <dataField fieldName="Date" columns="10">
+          <headerText>Ngày giao dịch</headerText>
+        </dataField>
+        <dataField fieldName="Note">
+          <headerText>Nội dung</headerText>
+        </dataField>
+        <dataField fieldName="Users">
+          <headerText>Người thực hiện</headerText>
+        </dataField>
+      </dataFields>
+    </view>
+    <view id="editForm1" type="Form" commandId="command1" label="Xem - Sửa">
+      <headerText />
+      <categories>
+        <category id="c1" headerText="Thông tin giao dịch" flow="NewColumn">
+          <description />
+          <dataFields>
+            <dataField fieldName="ID" columns="15">
+              <headerText>Mã giao dịch</headerText>
+            </dataField>
+            <dataField fieldName="AccountID" aliasFieldName="AccountNumber">
+              <headerText>Số TK</headerText>
+            </dataField>
+            <dataField fieldName="AccountCustomerName">
+              <headerText>Tên KH</headerText>
+            </dataField>
+            <dataField fieldName="Debit" columns="15">
+              <headerText>Nộp tiền</headerText>
+            </dataField>
+            <dataField fieldName="Credit" columns="15">
+              <headerText>Rút Tiền</headerText>
+            </dataField>
+            <dataField fieldName="Date" columns="10">
+              <headerText>Ngày giao dịch</headerText>
+            </dataField>
+            <dataField fieldName="Note">
+              <headerText>Nội dung</headerText>
+            </dataField>
+            <dataField fieldName="Users">
+              <headerText>Người thực hiện</headerText>
+            </dataField>
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+    <view id="createForm2" type="Form" commandId="command1" label="Thêm mới">
+      <headerText />
+      <categories>
+        <category id="c1" flow="NewColumn">
+          <description><![CDATA[$DefaultNewDescription]]></description>
+          <dataFields>
+            <dataField fieldName="AccountID" aliasFieldName="AccountNumber" />
+            <dataField fieldName="AccountCustomerName" />
+            <dataField fieldName="Debit" columns="15" />
+            <dataField fieldName="Date" columns="10" />
+            <dataField fieldName="Note" />
+            <dataField fieldName="Users" />
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+  </views>
+  <actions>
+    <actionGroup id="ag1" scope="Grid">
+      <action id="a1" commandName="Select" commandArgument="editForm1" />
+      <action id="a2" commandName="Edit" />
+      <action id="a3" commandName="Delete" />
+      <action id="a6" />
+      <action id="a7" commandName="New" commandArgument="grid1" />
+      <action id="a8" commandName="Duplicate" />
+    </actionGroup>
+    <actionGroup id="ag2" scope="Form">
+      
+      <action id="a2" commandName="Delete" />
+      <action id="a3" commandName="Cancel" />
+      <action id="a4" whenLastCommandName="Edit" commandName="Update" commandArgument="Save" />
+      <action id="a5" whenLastCommandName="Edit" commandName="Cancel" />
+      <action id="a6" whenLastCommandName="New" commandName="Insert" commandArgument="Save" />
+      <action id="a7" whenLastCommandName="New" commandName="Insert" commandArgument="SaveAndNew" />
+      <action id="a8" whenLastCommandName="New" commandName="Cancel" />
+      <action id="a9" whenLastCommandName="Duplicate" commandName="Insert" />
+      <action id="a10" whenLastCommandName="Duplicate" commandName="Cancel" />
+      <action id="a13" whenLastCommandName="Insert" whenLastCommandArgument="Save" commandName="Select" commandArgument="editForm1" whenClientScript="this.hasDetails()" />
+      <action id="a14" whenLastCommandName="Insert" whenLastCommandArgument="SaveAndNew" commandName="New" />
+    </actionGroup>
+    <actionGroup id="ag3" scope="ActionBar" flat="true" headerText="New">
+      <action id="a102" />
+      <action commandArgument="Debit" headerText="Nộp tiền" id="a100" commandName="Custom" cssClass="material-icon-payments" confirmation="_controller=Debit&#xD;&#xA;_title=Nộp tiền&#xD;&#xA;_width=500" />
+      <action headerText="Rút Tiền" id="a101" commandName="Custom" cssClass="material-icon-logout" confirmation="_controller=Credit&#xD;&#xA;_title=Rút tiền&#xD;&#xA;_width=500" commandArgument="Credit" />
+    </actionGroup>
+    <actionGroup id="ag4" scope="ActionBar" headerText="Edit/Delete" flat="true">
+      
+      <action id="a2" whenKeySelected="true" commandName="Delete" cssClass="DeleteIcon" whenView="grid1" headerText="Xóa" />
+    </actionGroup>
+  </actions>
+  <businessRules>
+    <rule id="r100" commandName="Custom" commandArgument="Debit" type="Sql" phase="Execute"><![CDATA[INSERT INTO [dbo].[Transactions]
+ ([AccountID]
+           ,[Credit]
+           ,[Debit]
+           ,[Date]
+           ,[Note]
+           ,[Users])
+		   VALUES (
+		   @Parameters_AccountID
+			 ,0
+			 ,@Parameters_Amount 
+			 , GETDATE()
+			 ,@Parameters_Notes
+			 ,@BusinessRules_UserName
+		   )]]></rule>
+    <rule id="r101" commandName="Custom" commandArgument="Credit" type="Sql" phase="Execute"><![CDATA[INSERT INTO [dbo].[Transactions]
+ ([AccountID]
+           ,[Credit]
+           ,[Debit]
+           ,[Date]
+           ,[Note]
+           ,[Users])
+		   VALUES (
+		   @Parameters_AccountID
+			 ,@Parameters_Amount
+			, 0
+			 , GETDATE()
+			 ,@Parameters_Notes
+			 ,@BusinessRules_UserName
+		   )]]></rule>
+  </businessRules>
+</dataController>

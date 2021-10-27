@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataModel baseSchema="dbo" baseTable="Customers" alias="Customers" created="2021-06-12T21:50:33" modified="2021-06-12T21:50:33" xmlns="urn:schemas-codeontime-com:data-model">
+  <foreignKeys />
+  <columns>
+    <column name="CustomerID" fieldName="CustomerID" label="Customer ID" />
+    <column name="CustomerName" fieldName="CustomerName" label="Customer Name" />
+    <column name="UserName" fieldName="UserName" label="User Name" />
+  </columns>
+</dataModel>

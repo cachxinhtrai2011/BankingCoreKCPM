@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataController name="Customers" conflictDetection="overwriteChanges" label="Customers" xmlns="urn:schemas-codeontime-com:data-aquarium">
+  <commands>
+    <command id="command1" type="Text">
+      <text><![CDATA[
+select
+	"Customers"."CustomerID" "CustomerID"
+	,"Customers"."CustomerName" "CustomerName"
+	,"Customers"."UserName" "UserName"
+from "dbo"."Customers" "Customers"
+]]></text>
+    </command>
+    <command id="CustomerIDIdentityCommand" type="Text" event="Inserted">
+      <text><![CDATA[select @@identity]]></text>
+      <output>
+        <fieldOutput fieldName="CustomerID" />
+      </output>
+    </command>
+  </commands>
+  <fields>
+    <field name="CustomerID" type="Int32" allowNulls="false" isPrimaryKey="true" label="Mã KH" readOnly="true" />
+    <field name="CustomerName" type="String" label="Tên khách hàng" length="128" showInSummary="true" />
+    <field name="UserName" type="String" label="Tài khoản đăng nhập" length="128" showInSummary="true" />
+    <field name="CustomerAccounts" type="DataView" label="Customer Accounts">
+      <dataView controller="CustomerAccounts" view="grid1" filterFields="CustomerID" />
+    </field>
+    <field name="CustomerContact" type="DataView" label="Customer Contact">
+      <dataView controller="CustomerContact" view="grid1" filterFields="CustomerID" />
+    </field>
+    <field name="CustomerDocument" type="DataView" label="Customer Document">
+      <dataView controller="CustomerDocument" view="grid1" filterFields="CustomerID" />
+    </field>
+  </fields>
+  <views>
+    <view id="grid1" type="Grid" commandId="command1" label="Khách Hàng">
+      <headerText />
+      <dataFields>
+        <dataField fieldName="CustomerName" />
+        <dataField fieldName="UserName" />
+      </dataFields>
+    </view>
+    <view id="editForm1" type="Form" commandId="command1" label="Xem / Sửa">
+      <headerText />
+      <categories>
+        <category id="c1" headerText="Thông tin cơ bản" tab="Thông tin cơ bản" flow="NewColumn">
+          <description />
+          <dataFields>
+            <dataField fieldName="CustomerName">
+              <headerText>Tên KH</headerText>
+            </dataField>
+            <dataField fieldName="UserName">
+              <headerText>User Login</headerText>
+            </dataField>
+            <dataField fieldName="CustomerContact" columns="15">
+              <headerText>Thông tin liên lạc</headerText>
+            </dataField>
+            <dataField fieldName="CustomerDocument" columns="15">
+              <headerText>Giấy tờ</headerText>
+            </dataField>
+            <dataField fieldName="CustomerAccounts" columns="15">
+              <headerText>Tài khoản</headerText>
+            </dataField>
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+    <view id="createForm1" type="Form" commandId="command1" label="Thêm mới">
+      <headerText />
+      <categories>
+        <category id="c1" headerText="Thông tin cơ bản" tab="Thông tin cơ bản" flow="NewColumn">
+          <description />
+          <dataFields>
+            <dataField fieldName="CustomerName">
+              <headerText>Tên KH</headerText>
+            </dataField>
+            <dataField fieldName="UserName">
+              <headerText>User Login</headerText>
+            </dataField>
+            <dataField fieldName="CustomerContact" columns="15">
+              <headerText>Thông tin liên lạc</headerText>
+            </dataField>
+            <dataField fieldName="CustomerDocument" columns="15">
+              <headerText>Giấy tờ</headerText>
+            </dataField>
+            <dataField fieldName="CustomerAccounts" columns="15">
+              <headerText>Tài khoản</headerText>
+            </dataField>
+          </dataFields>
+        </category>
+      </categories>
+    </view>
+  </views>
+  <actions>
+    <actionGroup id="ag1" scope="Grid">
+      <action id="a1" commandName="Select" commandArgument="editForm1" />
+      <action id="a2" commandName="Edit" />
+      <action id="a3" commandName="Delete" />
+      <action id="a6" />
+      <action id="a7" commandName="New" commandArgument="grid1" />
+      <action id="a8" commandName="Duplicate" commandArgument="createForm1" />
+    </actionGroup>
+    <actionGroup id="ag2" scope="Form">
+      <action id="a1" commandName="Edit" />
+      <action id="a2" commandName="Delete" />
+      <action id="a3" commandName="Cancel" />
+      <action id="a4" whenLastCommandName="Edit" commandName="Update" commandArgument="Save" />
+      <action id="a5" whenLastCommandName="Edit" commandName="Cancel" />
+      <action id="a6" whenLastCommandName="New" commandName="Insert" commandArgument="Save" />
+      <action id="a7" whenLastCommandName="New" commandName="Insert" commandArgument="SaveAndNew" />
+      <action id="a8" whenLastCommandName="New" commandName="Cancel" />
+      <action id="a9" whenLastCommandName="Duplicate" commandName="Insert" />
+      <action id="a10" whenLastCommandName="Duplicate" commandName="Cancel" />
+      <action id="a13" whenLastCommandName="Insert" whenLastCommandArgument="Save" whenView="createForm1" commandName="Select" commandArgument="editForm1" whenClientScript="this.hasDetails()" />
+      <action id="a14" whenLastCommandName="Insert" whenLastCommandArgument="SaveAndNew" commandName="New" commandArgument="createForm1" />
+    </actionGroup>
+    <actionGroup id="ag3" scope="ActionBar" headerText="New" flat="true">
+      <action id="a1" commandName="New" commandArgument="createForm1" cssClass="NewIcon" headerText="Thêm mới" />
+    </actionGroup>
+    <actionGroup id="ag4" scope="ActionBar" headerText="Edit/Delete" flat="true">
+      <action id="a1" whenKeySelected="true" commandName="Edit" commandArgument="editForm1" cssClass="EditIcon" whenView="grid1" headerText="Sửa" />
+      <action id="a2" whenKeySelected="true" commandName="Delete" cssClass="DeleteIcon" whenView="grid1" headerText="Xóa" />
+    </actionGroup>
+  </actions>
+</dataController>

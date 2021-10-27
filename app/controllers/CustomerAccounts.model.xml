@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dataModel baseSchema="dbo" baseTable="CustomerAccounts" alias="CustomerAccounts" created="2021-06-12T21:50:32" modified="2021-06-12T23:33:24" x="20" y="20" xmlns="urn:schemas-codeontime-com:data-model">
+  <foreignKeys>
+    <foreignKey id="Customer" parentTableSchema="dbo" parentTableName="Customers" x="328" y="20">
+      <foreignKeyColumn columnName="CustomerID" parentColumnName="CustomerID" />
+    </foreignKey>
+  </foreignKeys>
+  <columns>
+    <column name="ID" fieldName="ID" label="Id" />
+    <column name="AccountNumber" fieldName="AccountNumber" label="Account Number" />
+    <column name="CreateDate" fieldName="CreateDate" label="Create Date" />
+    <column name="CustomerID" fieldName="CustomerID" label="Customer ID" aliasColumnName="CustomerName" aliasForeignKey="Customer" />
+    <column name="CustomerName" fieldName="CustomerName" label="Customer Name" foreignKey="Customer" />
+    <column name="UserName" fieldName="CustomerUserName" label="Customer User Name" foreignKey="Customer" />
+    <column name="EmployeeID" fieldName="EmployeeID" label="Employee ID" />
+    <column name="Interest" fieldName="Interest" label="Interest" />
+    <column name="DateBegin" fieldName="DateBegin" label="Date Begin" />
+    <column fieldName="Balance" type="decimal" dataType="Decimal" label="Balance">
+      <formula> select (sum(Debit) - sum(Credit)) from Transactions where AccountID = CustomerAccounts.ID</formula>
+    </column>
+  </columns>
+</dataModel>
